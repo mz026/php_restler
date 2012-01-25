@@ -1,0 +1,13 @@
+{
+    "hash": "76fbce52091284c4fc600b9bb819c984",
+    "packages": [
+        {
+            "package": "mockery\/mockery",
+            "version": "0.7.2-dev"
+        },
+        {
+            "package": "cordoval\/phpspec",
+            "version": "master-dev"
+        }
+    ]
+}

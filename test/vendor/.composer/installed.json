@@ -1,0 +1,73 @@
+[
+    {
+        "name": "mockery\/mockery",
+        "version": "0.7.2-dev",
+        "version_normalized": "0.7.2.0-dev",
+        "source": {
+            "type": "git",
+            "url": "http:\/\/github.com\/padraic\/mockery.git",
+            "reference": "7ac4b0273c786db0ae8f3adc279f4d16096b248e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "http:\/\/github.com\/padraic\/mockery\/zipball\/7ac4b0273c786db0ae8f3adc279f4d16096b248e",
+            "reference": "7ac4b0273c786db0ae8f3adc279f4d16096b248e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "suggest": {
+            "hamcrest": "1.0.0"
+        },
+        "type": "library",
+        "names": [
+            "mockery\/mockery"
+        ],
+        "installation-source": "dist",
+        "license": [
+            "New BSD"
+        ],
+        "autoload": {
+            "psr-0": {
+                "Mockery": "library\/"
+            }
+        }
+    },
+    {
+        "name": "cordoval\/phpspec",
+        "version": "master-dev",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "http:\/\/github.com\/cordoval\/phpspec.git",
+            "reference": "90408d089360458c8356c9c631558c953ea02728"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "http:\/\/github.com\/cordoval\/phpspec\/zipball\/90408d089360458c8356c9c631558c953ea02728",
+            "reference": "90408d089360458c8356c9c631558c953ea02728",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2",
+            "mockery\/mockery": "0.7.*"
+        },
+        "bin": [
+            "scripts\/phpspec-composer.php"
+        ],
+        "type": "library",
+        "names": [
+            "cordoval\/phpspec"
+        ],
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "autoload": {
+            "psr-0": {
+                "PHPSpec\\": "src\/"
+            }
+        }
+    }
+]
