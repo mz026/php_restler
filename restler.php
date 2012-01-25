@@ -33,9 +33,9 @@ class Restler {
     $handle -> setup();
     $result = $handle -> execute();
     if ( $handle -> is_success()) {
-      call_user_func($cb, NULL, $result, $handle->get_ch());
+      call_user_func($cb, NULL, $result, $handle);
     } else {
-      call_user_func($cb, FALSE, $result, $handle->get_ch());
+      call_user_func($cb, FALSE, $result, $handle);
     }
     $handle -> close();
   }
@@ -103,7 +103,6 @@ class Restler {
 }
 
 class Curl_Handle {
-  private $ch;
 
   function __construct ($options)
   {
@@ -126,15 +125,22 @@ class Curl_Handle {
   }
   function execute()
   {
-    return curl_exec($this -> ch);
+    $result = curl_exec($this -> ch);
+    $this -> status = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+    return $result;
   }
 
   function is_success()
   {
-    return curl_getinfo($this -> ch, CURLINFO_HTTP_CODE) < 400;
+    return $this->get_status() < 400;
   }
 
-  function get_ch()
+  function get_status()
+  {
+    return $this -> status; 
+  }
+
+  function get_handler()
   {
     return $this -> ch;
   }
@@ -143,6 +149,9 @@ class Curl_Handle {
   {
     curl_close($this -> ch);
   }
+
+  public $status;
+  private $ch;
 }
 class RESTLER_EXCEPTION extends Exception {}
 class NULL_URL_EXCEPTION extends RESTLER_EXCEPTION {}
