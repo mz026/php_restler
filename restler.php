@@ -13,6 +13,7 @@
  *    , 'body' => <string> | <array>
  *  ));
  */
+require_once "Response.php";
 
 class Restler {
   public static function request($options = NULL)
@@ -31,11 +32,13 @@ class Restler {
     ));
 
     $handle -> setup();
-    $result = $handle -> execute();
+    $raw_response = $handle -> execute();
+    $response = new Response($raw_response);
+
     if ( $handle -> is_success()) {
-      call_user_func($cb, NULL, $result, $handle);
+      call_user_func($cb, NULL, $response, $handle);
     } else {
-      call_user_func($cb, FALSE, $result, $handle);
+      call_user_func($cb, FALSE, $response, $handle);
     }
     $handle -> close();
   }
@@ -99,7 +102,6 @@ class Restler {
     }
 
   }
-
 }
 
 class Curl_Handle {
@@ -116,6 +118,7 @@ class Curl_Handle {
   {
     curl_setopt_array($this -> ch, array(
       CURLOPT_URL => $this -> url
+      , CURLOPT_HEADER => TRUE
       , CURLOPT_CUSTOMREQUEST => $this -> method  
       , CURLOPT_HTTPHEADER => $this -> headers
       , CURLOPT_RETURNTRANSFER => TRUE
@@ -125,9 +128,9 @@ class Curl_Handle {
   }
   function execute()
   {
-    $result = curl_exec($this -> ch);
+    $this -> result = curl_exec($this -> ch);
     $this -> status = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
-    return $result;
+    return $this -> result;
   }
 
   function is_success()
@@ -153,6 +156,7 @@ class Curl_Handle {
   public $status;
   private $ch;
 }
+
 class RESTLER_EXCEPTION extends Exception {}
 class NULL_URL_EXCEPTION extends RESTLER_EXCEPTION {}
 class INVALID_ARGUMENT_EXCEPTION extends RESTLER_EXCEPTION {}

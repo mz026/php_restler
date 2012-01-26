@@ -47,30 +47,17 @@ class DescribeRestler extends \PHPSpec\Context
         , 'headers' => array(
             'headerkey1' => 'headerVal1'
           , 'headerkey2' => 'headerVal2')  
-          , 'callback' => function ($err, $result, $ch) use ($that, $expected_result_array) {
-          $res_array = $that -> string2JSONArray($result);
-          $that -> spec($err) -> should -> beNull();
-          $that -> spec($res_array['headers']['headerkey1']) 
-            -> should -> be('headerVal1');
-          $that -> spec($res_array['headers']['headerkey2']) 
-            -> should -> be('headerVal2');
+          , 'callback' => 
+          function ($err, $result, $ch) use ($that, $expected_result_array) {
+            $res_array = $that -> string2JSONArray($result->get_body());
+            $that -> spec($err) -> should -> beNull();
+            $that -> spec($res_array) -> shouldNot -> beNull();
+            $that -> spec($res_array['headers']['headerkey1']) 
+              -> should -> be('headerVal1');
+            $that -> spec($res_array['headers']['headerkey2']) 
+              -> should -> be('headerVal2');
           }
       ));
-  }
-
-  function itShouldBeAbleToGetErrorRequest()
-  {
-    $that = $this;
-    Restler::request(array(
-      'url' => 'http://localhost:3001/404'
-      , 'callback' => function($err, $res, $ch) use ($that) {
-        $that -> spec($err) -> should -> beFalse();
-      }));
-  }
-
-  function string2JSONArray($str, $level=10)
-  {
-    return json_decode($str, true, 10);
   }
 
   function itShouldBeAbleToPost()
@@ -88,11 +75,28 @@ class DescribeRestler extends \PHPSpec\Context
       , 'headers' => $headers
       , 'body' => $body
       , 'callback' => function($err, $res, $ch)use($body, $that){
-        $res_array = $that -> string2JSONArray($res);
+        $res_array = $that -> string2JSONArray($res->get_body());
+        $that -> spec($res_array) -> shouldNot -> beNull();
         $that -> spec($res_array['method']) -> should -> be('POST');
         $that -> spec($res_array['body']) -> should -> be($body);
       }
     ));
+
   }
+  function itShouldBeAbleToGetErrorRequest()
+  {
+    $that = $this;
+    Restler::request(array(
+      'url' => 'http://localhost:3001/404'
+      , 'callback' => function($err, $res, $ch) use ($that) {
+        $that -> spec($err) -> should -> beFalse();
+      }));
+  }
+
+  function string2JSONArray($str, $level=10)
+  {
+    return json_decode($str, true, 10);
+  }
+
 }
 ?>
