@@ -5,13 +5,18 @@
  *  Author: Yang-Hsing Lin
  *
  *  usage:
- *  Restler::request(array(
+ *  $result = Restler::request(array(
  *    'url' => <string>
- *    , 'callback' => function ($err, $result, $curl_handle){}
  *    , 'method' => 'GET' (optional, default to 'GET')
  *    , 'headers' => array('key' => 'val') (optional)
  *    , 'body' => <string> | <array>
  *  ));
+ *
+ *  $result is array of the format:
+ *  array(
+ *    'status' => <Number>
+ *    , 'response' => <Response>
+ *  );
  */
 require_once "Response.php";
 
@@ -22,7 +27,6 @@ class Restler {
     $url = self::get_url_and_throw_if_needed($options);
     $headers = self::make_headers_array_from_options($options);
     $body = self::get_request_body($options);
-    $cb = self::get_callback_and_throw_if_needed($options);
     
     $handle = new Curl_Handle(array(
       'method' => $method
@@ -34,13 +38,12 @@ class Restler {
     $handle -> setup();
     $raw_response = $handle -> execute();
     $response = new Response($raw_response);
-
-    if ( $handle -> is_success()) {
-      call_user_func($cb, NULL, $response, $handle);
-    } else {
-      call_user_func($cb, FALSE, $response, $handle);
-    }
     $handle -> close();
+
+    return array(
+      'status' => $handle -> get_status()
+      , 'response' => $response
+    );
   }
 
   private static function get_request_method($options) 
@@ -89,18 +92,6 @@ class Restler {
       $body = $options['body'];
     }
     return $body;
-  }
-  private static function get_callback_and_throw_if_needed ($options) 
-  {
-    if (is_array($options) 
-      && isset($options['callback']) 
-      && is_callable($options['callback'])) {
-      return $options['callback'];
-    } else {
-      throw new INVALID_ARGUMENT_EXCEPTION(
-        'second argument should be callable');
-    }
-
   }
 }
 
