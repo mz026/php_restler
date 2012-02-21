@@ -24,7 +24,7 @@ class DescribeRestler extends \PHPSpec\Context
   function itShouldThrowGivenNoCallback()
   {
     $this -> spec(function() {
-        $result = Restler::request(array('url' => 'http://localhost:3001'));
+        $result = Restler::request(array('url' => 'http://localhost/phpTrial/echo'));
       }) -> should -> throwException('INVALID_ARGUMENT_EXCEPTION');
   }
 
@@ -35,7 +35,7 @@ class DescribeRestler extends \PHPSpec\Context
         'method' => 'GET'  
         , 'body' => array()
         , 'headers' => array(
-          'host' => 'localhost:3001'
+          'host' => 'localhost/phpTrial/echo'
           , 'accept' => '*/*'
           , 'headerkey1' => 'headerVal1'
           , 'headerkey2' => 'headerVal2')
@@ -43,7 +43,7 @@ class DescribeRestler extends \PHPSpec\Context
     );
     
     Restler::request(array(
-        'url' => 'http://localhost:3001'
+        'url' => 'http://localhost/phpTrial/echo'
         , 'headers' => array(
             'headerkey1' => 'headerVal1'
           , 'headerkey2' => 'headerVal2')  
@@ -70,7 +70,7 @@ class DescribeRestler extends \PHPSpec\Context
       'headerkey1' => 'headerVal1');
 
     Restler::request(array(
-      'url' => 'http://localhost:3001'
+      'url' => 'http://localhost/phpTrial/echo'
       , 'method' => 'POST'
       , 'headers' => $headers
       , 'body' => $body
@@ -87,7 +87,7 @@ class DescribeRestler extends \PHPSpec\Context
   {
     $that = $this;
     Restler::request(array(
-      'url' => 'http://localhost:3001/404'
+      'url' => 'http://localhost/404'
       , 'callback' => function($err, $res, $ch) use ($that) {
         $that -> spec($err) -> should -> beFalse();
       }));
