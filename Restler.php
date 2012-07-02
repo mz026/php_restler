@@ -113,7 +113,9 @@ class Curl_Handle {
       , CURLOPT_CUSTOMREQUEST => $this -> method  
       , CURLOPT_HTTPHEADER => $this -> headers
       , CURLOPT_RETURNTRANSFER => TRUE
-      , CURLOPT_POSTFIELDS => $this -> body
+      , CURLOPT_POSTFIELDS => is_array($this -> body) 
+        ? http_build_query($this -> body)
+        : $this -> body
     ));
     return $this;
   }

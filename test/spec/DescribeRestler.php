@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../restler.php");
+require_once(__DIR__ . "/../../Restler.php");
 
 class DescribeRestler extends \PHPSpec\Context
 {
@@ -40,7 +40,6 @@ class DescribeRestler extends \PHPSpec\Context
     $res_array = json_decode($result['response'] -> get_body(), true, 10);
 
     $this -> spec($result['status']) -> should -> be(200);
-    $this -> spec($res_array['method']) -> should -> be('GET');
     $this -> spec($res_array['headers']['headerkey1']) 
       -> should -> be('headerVal1');
     $this -> spec($res_array['headers']['headerkey2']) 
@@ -66,7 +65,29 @@ class DescribeRestler extends \PHPSpec\Context
 
     $res_arr = json_decode($result['response'] -> get_body(), TRUE, 10);
     $this -> spec($res_arr['body']) -> should -> be($body);
-    $this -> spec($res_arr['method']) -> should -> be('POST');
+    $this -> spec($res_arr['headers']['headerkey1']) 
+      -> should -> be('headerVal1');
+
+  }
+  function itShouldBePostWithUrlEncodedContentType()
+  {
+    $body = array(
+      'hello' => 'world'
+      , 'default' => 'Tomi');
+    $headers = array(
+      'headerkey1' => 'headerVal1'
+      , 'Content-Type' => 'application/x-www-form-urlencoded'
+    );
+
+    $result = Restler::request(array(
+      'url' => 'http://localhost/phpTrial/echo'
+      , 'method' => 'POST'
+      , 'headers' => $headers
+      , 'body' => $body
+    ));
+
+    $res_arr = json_decode($result['response'] -> get_body(), TRUE, 10);
+    $this -> spec($res_arr['body']) -> should -> be($body);
     $this -> spec($res_arr['headers']['headerkey1']) 
       -> should -> be('headerVal1');
 
