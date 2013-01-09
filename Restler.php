@@ -48,13 +48,26 @@ class Restler {
 
   private static function get_request_method($options) 
   {
-    if ( isset($options['method']) && is_string($options['method'])
-      && (strtolower($options['method']) === 'post')) {
-      $method = 'POST';
-    } else {
-      $method = 'GET';
+    if ( ! self::is_option_method_valid($options) ) {
+      return 'GET';
+    } 
+
+    switch (strtolower($options['method'])) {
+      case 'post':
+        $method = 'POST';
+        break;
+      case 'put':
+        $method = 'PUT';
+        break;
+      default:
+        $method = 'GET';
+        break;
     }
     return $method;
+  }
+  private static function is_option_method_valid($options)
+  {
+    return isset($options['method']) && is_string($options['method']);
   }
   private static function get_url_and_throw_if_needed ($options) 
   {

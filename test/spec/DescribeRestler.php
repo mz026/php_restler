@@ -25,14 +25,14 @@ class DescribeRestler extends \PHPSpec\Context
   {
     $this -> spec(function() {
       $result = Restler::request(
-        array('url' => 'http://localhost/phpTrial/echo'));
+        array('url' => 'http://localhost/phpTrial/echo.php'));
       }) -> shouldNot -> throwException('INVALID_ARGUMENT_EXCEPTION');
   }
 
   function itShouldBeAbleToGetNormalRequest()
   {
     $result = Restler::request(array(
-        'url' => 'http://localhost/phpTrial/echo'
+        'url' => 'http://localhost/phpTrial/echo.php'
         , 'headers' => array(
             'headerkey1' => 'headerVal1'
           , 'headerkey2' => 'headerVal2')  
@@ -57,7 +57,7 @@ class DescribeRestler extends \PHPSpec\Context
       'headerkey1' => 'headerVal1');
 
     $result = Restler::request(array(
-      'url' => 'http://localhost/phpTrial/echo'
+      'url' => 'http://localhost/phpTrial/echo.php'
       , 'method' => 'POST'
       , 'headers' => $headers
       , 'body' => $body
@@ -80,7 +80,7 @@ class DescribeRestler extends \PHPSpec\Context
     );
 
     $result = Restler::request(array(
-      'url' => 'http://localhost/phpTrial/echo'
+      'url' => 'http://localhost/phpTrial/echo.php'
       , 'method' => 'POST'
       , 'headers' => $headers
       , 'body' => $body
