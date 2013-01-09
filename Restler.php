@@ -33,6 +33,7 @@ class Restler {
       , 'url' => $url
       , 'headers' => $headers
       , 'body' => $body
+      , 'files' => isset($options['files']) ? $options['files'] : array()
     ));
 
     $handle -> setup();
@@ -117,6 +118,7 @@ class Curl_Handle {
     $this -> url = $options['url'];
     $this -> headers = $options['headers'];
     $this -> body = $options['body'];
+    $this -> files = $options['files'];
   }
   function setup()
   {
@@ -126,11 +128,29 @@ class Curl_Handle {
       , CURLOPT_CUSTOMREQUEST => $this -> method  
       , CURLOPT_HTTPHEADER => $this -> headers
       , CURLOPT_RETURNTRANSFER => TRUE
-      , CURLOPT_POSTFIELDS => is_array($this -> body) 
-        ? http_build_query($this -> body)
-        : $this -> body
+      , CURLOPT_POSTFIELDS => $this -> get_request_body()
     ));
     return $this;
+  }
+  private function get_request_body()
+  {
+    if ( ! empty($this -> files) ) {
+      return $this -> get_body_with_file();
+    } else if (is_array($this -> body)) {
+      return http_build_query($this -> body);
+    } else {
+      return $this -> body;
+    }
+  }
+  private function get_body_with_file()
+  {
+    $body = $this -> body;
+    foreach ($this -> files as $file_key => $file_path) {
+      $to_merge = array();
+      $to_merge[$file_key] = "@{$file_path}";
+      $body = array_merge($body, $to_merge);
+    }
+    return $body;
   }
   function execute()
   {

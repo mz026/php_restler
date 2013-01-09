@@ -12,6 +12,9 @@ clone and include ``restler.php`` file would introduce a class ``Restler`` under
       , 'method' => 'GET' (optional, default to 'GET')
       , 'headers' => array('key' => 'val') (optional)
       , 'body' => <string> | <array> (optional)
+      , 'files' => array(
+        'fileKey' => '/path/to/file'
+      ) (optional)
     ));
 
     $status = $result['status'];

@@ -102,6 +102,32 @@ class DescribeRestler extends \PHPSpec\Context
     $this -> spec($result['status']) -> should -> be(404);
   }
 
+  
+  function itShouldBeAbleToPostFile()
+  {
+    $body = array(
+      'hello' => 'world'
+      , 'default' => 'Tomi');
+    $headers = array(
+      'headerkey1' => 'headerVal1');
+
+    $file_path = dirname(__FILE__) . "";
+    $result = Restler::request(array(
+      'url' => 'http://localhost/phpTrial/echo.php'
+      , 'method' => 'POST'
+      , 'headers' => $headers
+      , 'body' => $body
+      , 'files' => array(
+        'fileKey' => "$file_path/fixture/hamu.jpg"
+      )
+    ));
+
+    $res_arr = json_decode($result['response'] -> get_body(), TRUE, 10);
+    $this -> spec($res_arr['body']) -> should -> be($body);
+    $this -> spec($res_arr['headers']['headerkey1']) 
+      -> should -> be('headerVal1');
+    $this -> spec(count($res_arr['files'])) -> shouldNot -> be(0);
+  }
   function string2JSONArray($str, $level=10)
   {
     return json_decode($str, true, 10);
